@@ -21,7 +21,7 @@ namespace Minecraft_Launcher_WPF
         private async void CheckLauncherVersion()
         {
             string currentVersion = "1.0.0"; // Замените на вашу текущую версию
-            string latestVersionUrl = "https://api.github.com/repos/ваш_пользователь/ваш_репозиторий/contents/version.txt"; // Укажите URL для файла версии
+            string latestVersionUrl = "https://api.github.com/repos/alxndlk/MLauncher/contents/version.txt"; // Укажите URL для файла версии
 
             using (HttpClient client = new HttpClient())
             {
@@ -32,20 +32,15 @@ namespace Minecraft_Launcher_WPF
                     dynamic versionInfo = JsonConvert.DeserializeObject(response);
                     string latestVersion = versionInfo.content; // Получаем содержимое файла
 
-                    // Декодируем содержимое в строку
                     latestVersion = Encoding.UTF8.GetString(Convert.FromBase64String(latestVersion));
 
                     if (string.Compare(currentVersion, latestVersion) < 0)
                     {
                         MessageBox.Show("Доступна новая версия лаунчера. Пожалуйста, обновите.");
-                        // Можно завершить приложение или направить пользователя на страницу с обновлением
-                        Application.Current.Shutdown();
                     }
                     else
                     {
-                        // Если версия актуальна, можно скрыть SplashScreen и запустить основной лаунчер
                         MessageBox.Show("Лаунчер обновлён до последней версии.");
-                        OpenMainWindow(); // Открываем основное окно
                     }
                 }
                 catch (Exception ex)

@@ -40,10 +40,9 @@ namespace Minecraft_Launcher_WPF
                 var json = File.ReadAllText(configPath);
                 dynamic config = JsonConvert.DeserializeObject(json);
                 gitHubToken = config.AccessToken;
-                MessageBox.Show(gitHubToken);
             } else
             {
-                MessageBox.Show(configPath);
+                MessageBox.Show("Нет доступа к ключу авторизаци...");
             }
         }
 
