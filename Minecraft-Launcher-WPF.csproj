@@ -34,6 +34,10 @@
   <ItemGroup>
     <PackageReference Include="CmlLib.Core" Version="4.0.2" />
     <PackageReference Include="CmlLib.Core.Installer.Forge" Version="1.0.0" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.68.0.3533" />
     <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.68.0.1869" />
