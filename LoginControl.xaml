@@ -1,0 +1,163 @@
+﻿<UserControl x:Class="Minecraft_Launcher_WPF.LoginControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="1280" Height="720">
+    
+    
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Border 
+        Background="#0A0A0A"
+    >
+    
+        <Grid>
+
+            <Grid.Background>
+                <ImageBrush ImageSource="Resourses/login_bg.png" Stretch="Fill"/>
+            </Grid.Background>
+
+            <Grid 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+            >
+
+                <Border 
+                    Width="300"
+                    Height="auto"
+                    Background="#0A0A0A"
+                    BorderThickness="1"
+                    BorderBrush="#20ffffff" Padding="30,0,30,30"
+                >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80px"/>
+                            <RowDefinition />
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0"
+                              VerticalAlignment="top"
+                              HorizontalAlignment="Center">
+                            <Image 
+                                Source="/Resourses/title.png" 
+                                Margin="0,-50,0,0" Width="240"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                />
+                        </Grid>
+
+
+                        <Grid Grid.Row="1">
+                            <Grid VerticalAlignment="Top">
+                                <StackPanel
+                                    Orientation="Vertical" 
+                                    HorizontalAlignment="Stretch"
+                                >
+
+                                    <Label
+                                        Content="Email / Ник" 
+                                        HorizontalAlignment="Left" 
+                                        VerticalAlignment="Center" 
+                                        Background="{x:Null}"
+                                        Opacity="0.5"
+                                        Foreground="white" 
+                                        FontWeight="Bold" 
+                                        Margin="0,0,0,5"
+                                        Padding="0,5,5,5"
+                                    />
+                                    <TextBox 
+                                        x:Name="txtUsername"
+                                        FontWeight="Bold"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        VerticalContentAlignment="Center"
+                                        Padding="5,0,5,0"
+                                        Margin="0,0,0,10"
+                                        Background="#FF111111"
+                                    />
+
+                                    <Label 
+                                        Content="Пароль"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Background="{x:Null}"     
+                                        Opacity="0.5"
+                                        Foreground="white" 
+                                        FontWeight="Bold"
+                                        Margin="0,0,0,5"
+                                        Padding="0,5,5,5"
+                                    />
+
+                                    <PasswordBox
+                                        x:Name="txtPassword"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalContentAlignment="Center"
+                                        VerticalAlignment="Stretch"
+                                        Background="#FF111111"
+                                        BorderBrush="#FF262626"
+                                        Foreground="#FF707070"
+                                        Padding="5,0,5,0"
+                                        Height="45"
+                                        Margin="0,0,0,10"
+                                    />
+
+                                    <TextBlock
+                                        HorizontalAlignment="left"
+                                        TextWrapping="Wrap"
+                                        Text="Забыли пароль?"
+                                        VerticalAlignment="Center"
+                                        FontWeight="Bold"
+                                        Opacity="0.5"
+                                        Foreground="white" 
+                                        Margin="0,15,0,20"
+                                    />
+
+
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Row="2"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                        >
+                            <Button 
+                                x:Name="loginButton"
+                                Content="АВТОРИЗОВАТЬСЯ"
+                                FontSize="10"
+                                Height="45"
+                                Cursor="Hand"
+                                Grid.ColumnSpan="2"
+                                Background="#FF018C44"
+                                FontWeight="Bold"
+                                Foreground="White"
+                                BorderBrush="#FF00CA60"
+                                BorderThickness="1"
+                                Click="loginButton_Click">
+                            </Button>
+
+                        </Grid>
+                        
+                        
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="10,0,10,0" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+
+                </Grid.RowDefinitions>
+                <Label Content="Email / Ник" HorizontalAlignment="Left" Margin="21,8,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FF505050" FontWeight="Bold"/>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

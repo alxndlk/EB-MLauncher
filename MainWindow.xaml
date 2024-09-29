@@ -1,0 +1,175 @@
+﻿<Window x:Class="Minecraft_Launcher_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Minecraft_Launcher_WPF"
+        mc:Ignorable="d"
+        Title="Эпоха Блоков"
+        Width="1280" Height="720"
+        ResizeMode="NoResize"
+        BorderThickness="0"
+        WindowStyle="None"
+        AllowsTransparency="True" 
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border
+        Background="#0A0A0A"
+        BorderBrush="#262626"
+        BorderThickness="1"
+        >
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="637*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <!-- Элементы которых не входят в сетку -->
+            <local:LoginControl 
+                x:Name="LoginControl"
+                Visibility="Visible"
+                Panel.ZIndex="12" Grid.ColumnSpan="2" Margin="0,0,-2,-2"
+            />
+
+            <local:OptionControl 
+                x:Name="OptionControl"
+                Visibility="Hidden"
+                Panel.ZIndex="12"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center" Grid.Column="1" Margin="385,0,0,0"
+            />
+
+            <Image
+               Grid.Column="1"
+               Panel.ZIndex="100"
+               Width="20"
+               Height="20"
+               VerticalAlignment="Top"
+               HorizontalAlignment="Right"
+               MouseLeftButtonDown="Image_CloseWindow"
+               Cursor="Hand"
+               Source="/Resourses/close-white.png"
+               Stretch="Fill" Margin="0,20,20,0"
+            />
+
+            <Image
+               Grid.Column="1"
+               Panel.ZIndex="100"
+               Width="20"
+               Height="20"
+               VerticalAlignment="Top"
+               HorizontalAlignment="Right"
+               MouseLeftButtonDown="Image_CollapseWindow"
+               Cursor="Hand"
+               Source="/Resourses/collapse.png"
+               Stretch="Fill" Margin="0,20,60,0"
+               />
+
+
+            <!-- Элементы сетки и разметки -->
+            <Grid Panel.ZIndex="1" Grid.ColumnSpan="2">
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border 
+                        BorderBrush="#20ffffff"
+                        Background="#0A0A0A"
+                        BorderThickness="0,0,1,0"
+                        Grid.Column="0"
+                        Padding="20"
+                        >
+                    </Border>
+
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid VerticalAlignment="Top">
+                                <StackPanel
+                                    Orientation="Vertical" 
+                                    HorizontalAlignment="Center"
+                                >
+                                    <Image  
+                                        Width="20"
+                                        Height="20"
+                                        Source="/Resourses/play.png" 
+                                        Margin="0,30,0,15"
+                                        Cursor="Hand"
+                                        MouseLeftButtonDown="PlayButton_Click"
+                                    />
+                                    <Image  
+                                        Width="20"
+                                        Height="20"
+                                        Source="/Resourses/setting.png" 
+                                        Margin="0,15,0,30"
+                                        x:Name="settingButton"
+                                        MouseLeftButtonDown="SettingsButton_Click"
+                                        Cursor="Hand"
+                                    />
+
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid VerticalAlignment="Bottom">
+                                <StackPanel
+                                    Orientation="Vertical" 
+                                    HorizontalAlignment="Center"
+                                >
+                                    <Image  
+                                        Width="20"
+                                        Height="20"
+                                        Source="/Resourses/logout.png" 
+                                        Margin="0,15,0,15"
+                                    />
+                                    <Image  
+                                        Width="20"
+                                        Height="20"
+                                        Source="/Resourses/discord.png" 
+                                        Margin="0,15,0,15"
+                                    />
+                                    <Image  
+                                        Width="20"
+                                        Height="20"
+                                        Source="/Resourses/help.png" 
+                                        Margin="0,15,0,30"
+                                        
+                                    />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <ContentControl
+                            x:Name="MainContentControl"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch" 
+                        />
+                    </Grid>
+
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
