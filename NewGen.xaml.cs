@@ -211,6 +211,8 @@ namespace Minecraft_Launcher_WPF
         private async Task listVersion(string username, MinecraftPath pathNEWGEN)
         {
             statusLabel.Content = "Установка Аркании";
+            modNameText.Text = "Установка Minecraft и Forge...";
+            progressBar.Visibility = Visibility.Visible;
             var mcVersion = "1.20.1";
             var forgeVersion = "47.2.32";
             var launcher = new MinecraftLauncher(pathNEWGEN);
@@ -219,8 +221,6 @@ namespace Minecraft_Launcher_WPF
 
             launcher.FileProgressChanged += (sender, args) =>
             {
-                modNameText.Text = "Установка Minecraft и Forge...";
-                progressBar.Visibility = Visibility.Visible;
                 progressBar.Maximum = args.TotalTasks;
                 progressBar.Value = args.ProgressedTasks;
             };

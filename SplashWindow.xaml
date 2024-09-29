@@ -19,6 +19,7 @@
             VerticalAlignment="Top" 
             Width="380" 
             Background="#FFBEBFBF" 
+            Visibility="Hidden"
             BorderBrush="{x:Null}" 
             Value="0" 
             Foreground="#FF616161" 

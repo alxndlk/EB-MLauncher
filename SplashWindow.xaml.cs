@@ -11,10 +11,6 @@ namespace Minecraft_Launcher_WPF
 {
     public partial class SplashWindow : Window
     {
-        private string currentVersion = "1.0.0";
-        private string versionFileUrl = "https://api.github.com/repos/alxndlk/MLauncher/contents/version.txt";
-        private string latestReleaseUrl = "https://api.github.com/repos/alxndlk/MLauncher/releases/latest";
-
         public SplashWindow()
         {
             InitializeComponent();
@@ -23,77 +19,139 @@ namespace Minecraft_Launcher_WPF
 
         private async void CheckLauncherVersion()
         {
+            string currentVersion = "1.2.0"; // Текущая версия лаунчера
+            string latestVersionUrl = "https://api.github.com/repos/alxndlk/MLauncher/contents/version.txt";
+            string downloadUrl = "https://github.com/alxndlk/MLauncher/releases/latest/download/Minecraft-Launcher-WPF.zip"; // Обновите путь к скачиванию при необходимости
+
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("User-Agent", "MinecraftLauncher");
 
                 try
                 {
-                    // Проверяем последнюю версию
-                    var response = await client.GetStringAsync(versionFileUrl);
+                    // Получаем содержимое version.txt
+                    var response = await client.GetStringAsync(latestVersionUrl);
                     dynamic versionInfo = JsonConvert.DeserializeObject(response);
                     string latestVersion = versionInfo.content;
 
+                    // Декодируем версию из Base64
                     latestVersion = Encoding.UTF8.GetString(Convert.FromBase64String(latestVersion)).Trim();
 
                     if (string.Compare(currentVersion, latestVersion) < 0)
                     {
                         newVersionText.Content = "Доступна новая версия лаунчера. Обновление...";
-
-                        // Скачиваем и обновляем лаунчер
-                        await DownloadAndInstallLatestVersion();
+                        await UpdateLauncher(downloadUrl);
                     }
                     else
                     {
                         newVersionText.Content = "Лаунчер обновлён до последней версии.";
+                        await Task.Delay(2000);
                         OpenMainWindow();
                     }
+                }
+                catch (HttpRequestException httpEx)
+                {
+                    newVersionText.Content = $"Ошибка HTTP: {httpEx.Message}";
                 }
                 catch (Exception ex)
                 {
                     newVersionText.Content = $"Произошла ошибка при проверке версии: {ex.Message}";
-                    OpenMainWindow();
                 }
             }
         }
 
-        private async Task DownloadAndInstallLatestVersion()
+        private async Task UpdateLauncher(string downloadUrl)
         {
-            using (HttpClient client = new HttpClient())
+            splashProgressBar.Visibility = Visibility.Visible;
+            string tempPath = Path.Combine(Path.GetTempPath(), "launcher_update.zip");
+            string extractPath = Path.Combine(Environment.CurrentDirectory, "update_temp");
+
+            try
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "MinecraftLauncher");
-
-                try
+                // Скачиваем архив с обновлением
+                using (HttpClient client = new HttpClient())
                 {
-                    // Получаем последнюю версию релиза
-                    var releaseResponse = await client.GetStringAsync(latestReleaseUrl);
-                    dynamic releaseInfo = JsonConvert.DeserializeObject(releaseResponse);
-                    string downloadUrl = releaseInfo.zipball_url;
+                    var response = await client.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead);
+                    response.EnsureSuccessStatusCode();
 
-                    // Скачиваем архив с обновлением
-                    var zipFilePath = Path.Combine(Environment.CurrentDirectory, "update.zip");
-                    var zipData = await client.GetByteArrayAsync(downloadUrl);
+                    // Получаем общее количество байт
+                    long totalBytes = response.Content.Headers.ContentLength ?? -1L;
+                    long receivedBytes = 0;
 
-                    // Сохраняем архив на диск
-                    await File.WriteAllBytesAsync(zipFilePath, zipData);
+                    using (var fs = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    {
+                        var buffer = new byte[8192];
+                        int bytesRead;
+                        while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                        {
+                            await fs.WriteAsync(buffer, 0, bytesRead);
+                            receivedBytes += bytesRead;
 
-                    // Распаковываем архив в текущую директорию
-                    var extractPath = Environment.CurrentDirectory;
-                    ZipFile.ExtractToDirectory(zipFilePath, extractPath, true);
-
-                    // Удаляем временный архив
-                    File.Delete(zipFilePath);
-
-                    // Перезапускаем приложение с новыми файлами
-                    MessageBox.Show("Лаунчер обновлён. Перезапуск...");
-                    System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-                    Application.Current.Shutdown();
+                            // Обновляем прогресс-бар
+                            if (totalBytes > 0)
+                            {
+                                splashProgressBar.Value = (int)((receivedBytes * 100) / totalBytes);
+                            }
+                        }
+                    }
                 }
-                catch (Exception ex)
+
+                // Проверяем, был ли загружен файл
+                if (!File.Exists(tempPath) || new FileInfo(tempPath).Length == 0)
                 {
-                    MessageBox.Show($"Ошибка при загрузке обновления: {ex.Message}");
-                    OpenMainWindow();
+                    throw new Exception("Файл обновления не был загружен корректно.");
                 }
+
+                // Распаковываем архив
+                if (Directory.Exists(extractPath))
+                {
+                    Directory.Delete(extractPath, true);
+                }
+
+                ZipFile.ExtractToDirectory(tempPath, extractPath);
+
+                // Заменяем текущие файлы лаунчера новыми
+                CopyFilesRecursively(new DirectoryInfo(extractPath), new DirectoryInfo(Environment.CurrentDirectory));
+
+                newVersionText.Content = "Лаунчер успешно обновлён. Перезапустите приложение.";
+            }
+            catch (Exception ex)
+            {
+                newVersionText.Content = $"Ошибка при обновлении: {ex.Message}";
+            }
+            finally
+            {
+                // Удаляем временные файлы
+                if (File.Exists(tempPath))
+                {
+                    File.Delete(tempPath);
+                }
+
+                if (Directory.Exists(extractPath))
+                {
+                    Directory.Delete(extractPath, true);
+                }
+            }
+        }
+
+        private void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target)
+        {
+            // Сначала создаем все подкаталоги в целевой директории
+            foreach (DirectoryInfo dir in source.GetDirectories())
+            {
+                DirectoryInfo targetSubdir = target.CreateSubdirectory(dir.Name);
+                CopyFilesRecursively(dir, targetSubdir);
+            }
+
+            // Копируем все файлы из исходной директории в целевую
+            foreach (FileInfo file in source.GetFiles())
+            {
+                string targetFilePath = Path.Combine(target.FullName, file.Name);
+                file.CopyTo(targetFilePath, true); // true для перезаписи существующих файлов
+
+                // Логируем процесс копирования
+                Console.WriteLine($"Копируем {file.FullName} в {targetFilePath}");
             }
         }
 

@@ -12,7 +12,6 @@ namespace Minecraft_Launcher_WPF
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
             var splash = new SplashWindow();
             splash.Show();
         }
