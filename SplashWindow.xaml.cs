@@ -15,13 +15,13 @@ namespace Minecraft_Launcher_WPF
         public SplashWindow()
         {
             InitializeComponent();
-            CheckLauncherVersion(); // Вызов проверки версии при запуске окна
+            CheckLauncherVersion(); 
         }
 
         private async void CheckLauncherVersion()
         {
-            string currentVersion = "1.0.0"; // Замените на вашу текущую версию
-            string latestVersionUrl = "https://api.github.com/repos/alxndlk/MLauncher/contents/version.txt"; // Укажите URL для файла версии
+            string currentVersion = "1.0.0";
+            string latestVersionUrl = "https://api.github.com/repos/alxndlk/MLauncher/contents/version.txt";
 
             using (HttpClient client = new HttpClient())
             {
@@ -30,7 +30,7 @@ namespace Minecraft_Launcher_WPF
                 {
                     var response = await client.GetStringAsync(latestVersionUrl);
                     dynamic versionInfo = JsonConvert.DeserializeObject(response);
-                    string latestVersion = versionInfo.content; // Получаем содержимое файла
+                    string latestVersion = versionInfo.content; 
 
                     latestVersion = Encoding.UTF8.GetString(Convert.FromBase64String(latestVersion));
 
@@ -41,6 +41,7 @@ namespace Minecraft_Launcher_WPF
                     else
                     {
                         MessageBox.Show("Лаунчер обновлён до последней версии.");
+                        Application.Current.Shutdown();
                     }
                 }
                 catch (Exception ex)
@@ -52,7 +53,6 @@ namespace Minecraft_Launcher_WPF
 
         private void OpenMainWindow()
         {
-            // Закрываем окно SplashScreen и открываем основное окно лаунчера
             this.Hide();
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
